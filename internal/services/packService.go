@@ -17,6 +17,7 @@ type (
 )
 
 func NewPackService(packSizes []int) *PackServiceImpl {
+	sort.Sort(sort.Reverse(sort.IntSlice(packSizes)))
 	return &PackServiceImpl{
 		packSizes: packSizes,
 	}
@@ -30,8 +31,6 @@ func (s *PackServiceImpl) CalculatePacks(orderQuantity int) ([]model.PackDetails
 		return nil, errors.New("no pack sizes configured")
 	}
 
-	// Sort pack sizes in descending order
-	sort.Sort(sort.Reverse(sort.IntSlice(s.packSizes)))
 	logrus.Info(s.packSizes)
 
 	var (
@@ -53,20 +52,25 @@ func (s *PackServiceImpl) CalculatePacks(orderQuantity int) ([]model.PackDetails
 			remainingQuantity %= packSize
 		}
 
+		if remainingQuantity == 0 {
+			continue
+		}
+
 		logrus.Infof("remainingQuantity:%d", remainingQuantity)
+
 		// if the remainingQuantity is less than the smallest pack try to add the whole quantity to a larger box (if there are larger boxes)
 		// but only if the box is not too large. Let's assume that the first half of boxes are too large
-		if remainingQuantity != 0 && remainingQuantity < smallestPack &&
+		if remainingQuantity < smallestPack &&
 			i > len(s.packSizes)/2 && i != lastIndex && packedQuantity != 0 && packsCount != 0 {
 			logrus.Infof("removing a pack size %d, count: %d", packSize, 1)
 			packMap[packSize] -= 1
 			logrus.Infof("adding a larger pack size %d, count: %d", s.packSizes[i-1], 1)
 			packMap[s.packSizes[i-1]] = 1
-			return s.packsToResponse(packMap), nil
+			remainingQuantity = 0
 		}
 
 		//if there is any remaining quantity when all the pack sizes have been checked
-		if remainingQuantity != 0 && i == lastIndex {
+		if i == lastIndex {
 			if packsCount != 0 {
 				//if any smallest (250) packs have been filled, we need to upgrade one 250 pack to a 500 pack
 				logrus.Infof("removing a pack size %d, count: %d", packSize, 1)
@@ -78,6 +82,7 @@ func (s *PackServiceImpl) CalculatePacks(orderQuantity int) ([]model.PackDetails
 				logrus.Infof("adding one smallest pack size %d, count: %d", packSize, 1)
 				packMap[packSize] += 1
 			}
+			remainingQuantity = 0
 		}
 	}
 
@@ -86,14 +91,13 @@ func (s *PackServiceImpl) CalculatePacks(orderQuantity int) ([]model.PackDetails
 
 func (s *PackServiceImpl) packsToResponse(packMap map[int]int) []model.PackDetails {
 	var packsNeeded []model.PackDetails
-	for size, count := range packMap {
-		if count <= 0 {
-			continue
+	for _, packSize := range s.packSizes {
+		if count, ok := packMap[packSize]; ok && count > 0 {
+			packsNeeded = append(packsNeeded, model.PackDetails{
+				PackSize:   packSize,
+				PacksCount: count,
+			})
 		}
-		packsNeeded = append(packsNeeded, model.PackDetails{
-			PackSize:   size,
-			PacksCount: count,
-		})
 	}
 
 	return packsNeeded

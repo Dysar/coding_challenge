@@ -70,8 +70,3 @@ func TestPackService_CalculatePacks(t *testing.T) {
 		})
 	}
 }
-
-func TestPackService_CalculatePacksV2(t *testing.T) {
-	s := NewPackService([]int{250, 500, 1000, 2000, 5000})
-	t.Log(len(s.packSizes) / 2)
-}
