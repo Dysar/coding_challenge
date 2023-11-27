@@ -17,11 +17,6 @@ type (
 		Port      int
 		PackSizes []int
 	}
-	CORS struct {
-		Headers []string
-		Methods []string
-		Origins []string
-	}
 )
 
 // New / Init / Get

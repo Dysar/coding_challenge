@@ -13,5 +13,6 @@ func NewRouter(config *config.Config) *mux.Router {
 
 	r.HandleFunc("/", viewHandler)
 	r.HandleFunc("/api/v1/calculate_packs", controller.calculatePacks)
+
 	return r
 }

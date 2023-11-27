@@ -17,14 +17,6 @@ func NewPackController(packService services.PackService) *PackController {
 	}
 }
 
-// @Summary Calculate packs
-// @Description
-// @Tags Packs
-// @Accept  json
-// @Produce  json
-// @Param request body model.OrderRequest true "request"
-// @Success 200 {object} model.PacksNeeded
-// @Router /api/v1/calculate_packs [post]
 func (c *PackController) calculatePacks(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
