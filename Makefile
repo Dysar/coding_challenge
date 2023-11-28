@@ -1,4 +1,4 @@
 dev:
 	go mod tidy
-	go build -o app cmd/main.go
-	app
+	go build -o bin/cmd cmd/main.go
+	bin/cmd
