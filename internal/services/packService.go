@@ -54,8 +54,6 @@ func (s *PackServiceImpl) CalculatePacks(orderQuantity int) ([]model.PackDetails
 			continue
 		}
 
-		logrus.Infof("remainingQuantity:%d", remainingQuantity)
-
 		// if the remainingQuantity is less than the smallest pack try to add the whole quantity to a larger box (if there are larger boxes)
 		// but only if the box is not too large. Let's assume that the first half of boxes are too large
 		if remainingQuantity < smallestPack &&
