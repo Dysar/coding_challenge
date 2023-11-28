@@ -14,7 +14,6 @@ import (
 func TestCalculatePacks(t *testing.T) {
 
 	t.Run("Valid request", func(t *testing.T) {
-		// Create a PackController with a MockPackService
 		packSvc := &mocks.PackService{}
 		controller := NewPackController(packSvc)
 
@@ -38,7 +37,6 @@ func TestCalculatePacks(t *testing.T) {
 	})
 
 	t.Run("Valid request 2", func(t *testing.T) {
-		// Create a PackController with a MockPackService
 		packSvc := &mocks.PackService{}
 		controller := NewPackController(packSvc)
 
@@ -62,7 +60,6 @@ func TestCalculatePacks(t *testing.T) {
 	})
 
 	t.Run("invalid request", func(t *testing.T) {
-		// Create a PackController with a MockPackService
 		packSvc := &mocks.PackService{}
 		controller := NewPackController(packSvc)
 
