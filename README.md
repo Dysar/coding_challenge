@@ -20,7 +20,7 @@ bin/bin
 
 * UI: http://localhost:8080 (you can change the port in your `conf.json` file)
 
-![UI](UI.png)
+![UI](UI2.png)
 * In case you would like to use the APIm the  endpoint to calculate the packs is POST http://localhost:8080/api/v1/calculate_packs
 
 Sample curl
