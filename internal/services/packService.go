@@ -4,7 +4,7 @@ import (
 	"challenge/internal/model"
 	"errors"
 	"github.com/sirupsen/logrus"
-	"sort"
+	"slices"
 )
 
 type (
@@ -17,7 +17,7 @@ type (
 )
 
 func NewPackService(packSizes []int) *PackServiceImpl {
-	sort.Sort(sort.Reverse(sort.IntSlice(packSizes)))
+	slices.Reverse(packSizes)
 	return &PackServiceImpl{
 		packSizes: packSizes,
 	}
@@ -30,8 +30,6 @@ func (s *PackServiceImpl) CalculatePacks(orderQuantity int) ([]model.PackDetails
 	if len(s.packSizes) == 0 {
 		return nil, errors.New("no pack sizes configured")
 	}
-
-	logrus.Info(s.packSizes)
 
 	var (
 		packedQuantity    int

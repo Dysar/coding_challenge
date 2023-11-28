@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/braintree/manners"
 	"github.com/sirupsen/logrus"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -21,7 +20,7 @@ func main() {
 
 	conf, confErr := config.New("conf.json")
 	if confErr != nil {
-		log.Panic("config parser", confErr)
+		logrus.Panic("config parser", confErr)
 	}
 
 	router := server.NewRouter(conf)

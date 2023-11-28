@@ -6,18 +6,15 @@ import (
 	"time"
 )
 
-type (
-	//Config ...
-	Config struct {
-		Server struct {
-			ReadHeaderTimeoutSeconds time.Duration
-			ReadTimeoutSeconds       time.Duration
-			WriteTimeoutSeconds      time.Duration
-		}
-		Port      int
-		PackSizes []int
+type Config struct {
+	Server struct {
+		ReadHeaderTimeoutSeconds time.Duration
+		ReadTimeoutSeconds       time.Duration
+		WriteTimeoutSeconds      time.Duration
 	}
-)
+	Port      int
+	PackSizes []int
+}
 
 // New / Init / Get
 func New(path string) (*Config, error) {

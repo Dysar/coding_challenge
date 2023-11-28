@@ -1,15 +1,14 @@
 package server
 
 import (
-	"challenge/internal/model"
 	"html/template"
 	"net/http"
 )
 
-type PageVariables struct {
-	Title         string
-	OrderQuantity int
-	Packs         []model.PackDetails
+type viewController struct{}
+
+func newViewController() *viewController {
+	return &viewController{}
 }
 
 var indexTemplate = template.Must(template.New("index").Parse(`
@@ -49,7 +48,7 @@ var indexTemplate = template.Must(template.New("index").Parse(`
                 } else {
                     resultDiv.innerHTML = '<p>Packs Needed:</p>';
                     data.packs_needed.forEach(pack => {
-                        resultDiv.innerHTML += "<p>" + pack.packs_count + " packs of " + pack.pack_size + " items</p>";
+                        resultDiv.innerHTML += "<p>" + pack.packs_count + " pack(s) of " + pack.pack_size + " items</p>";
                     });
                 }
             })
@@ -60,7 +59,7 @@ var indexTemplate = template.Must(template.New("index").Parse(`
 </html>
 `))
 
-func viewHandler(w http.ResponseWriter, r *http.Request) {
+func (c *viewController) viewHandler(w http.ResponseWriter, r *http.Request) {
 	err := indexTemplate.Execute(w, nil)
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
