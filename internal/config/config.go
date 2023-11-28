@@ -12,7 +12,6 @@ type Config struct {
 		ReadTimeoutSeconds       time.Duration
 		WriteTimeoutSeconds      time.Duration
 	}
-	Port      int
 	PackSizes []int
 }
 

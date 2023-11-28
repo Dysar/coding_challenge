@@ -25,15 +25,20 @@ func main() {
 
 	router := server.NewRouter(conf)
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default port if not specified
+	}
+
 	srv := &http.Server{
 		ReadHeaderTimeout: conf.Server.ReadHeaderTimeoutSeconds * time.Second,
 		ReadTimeout:       conf.Server.ReadTimeoutSeconds * time.Second,
 		WriteTimeout:      conf.Server.WriteTimeoutSeconds * time.Second,
 		Handler:           router,
-		Addr:              fmt.Sprintf(":%d", conf.Port),
+		Addr:              fmt.Sprintf(":%s", port),
 	}
 
-	logrus.Infof("Server is listening on %d", conf.Port)
+	logrus.Infof("Server is listening on %s", port)
 	if err := manners.NewWithServer(srv).ListenAndServe(); err != nil {
 		logrus.Fatal(err)
 	}
