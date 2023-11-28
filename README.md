@@ -18,14 +18,14 @@ bin/bin
 
 ## How to use
 
-* UI: http://localhost:8080 (you can change the port in your `conf.json` file)
+* UI: https://stark-river-82961-278b69188afd.herokuapp.com
 
 ![UI](UI2.png)
 * In case you would like to use the APIm the  endpoint to calculate the packs is POST http://localhost:8080/api/v1/calculate_packs
 
 Sample curl
 ```bash 
-curl --location --request POST 'localhost:8080/api/v1/calculate_packs' \
+curl --location --request POST 'https://stark-river-82961-278b69188afd.herokuapp.com/api/v1/calculate_packs' \
 --header 'Content-Type: application/json' \
 --data-raw '{
 "order_quantity":10
