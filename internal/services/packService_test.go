@@ -38,7 +38,8 @@ func TestPackService_CalculatePacks(t *testing.T) {
 			Name:       "501 ordered items",
 			OrderedQty: 501,
 			ExpectedPacks: []model.PackDetails{
-				{PackSize: 1000, PacksCount: 1},
+				{PackSize: 500, PacksCount: 1},
+				{PackSize: 250, PacksCount: 1},
 			},
 		},
 		{
