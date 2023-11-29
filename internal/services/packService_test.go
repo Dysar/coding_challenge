@@ -63,10 +63,24 @@ func TestPackService_CalculatePacks(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.Name, func(t *testing.T) {
-			service := NewPackService([]int{250, 500, 1000, 2000, 5000})
+			service := NewPackService()
 			packs, err := service.CalculatePacks(tc.OrderedQty)
 			assert.NoError(t, err)
 			assert.Equal(t, tc.ExpectedPacks, packs)
 		})
 	}
+}
+
+func TestPackServiceImpl_UpdatePackSizes(t *testing.T) {
+	svc := NewPackService()
+	svc.UpdatePackSizes([]int{1, 2, 3})
+	assert.Equal(t, []int{3, 2, 1}, svc.packSizes)
+}
+
+func TestPackServiceImpl_ReadPackSizes(t *testing.T) {
+	svc := NewPackService()
+	svc.UpdatePackSizes([]int{1, 2, 3})
+
+	pss := svc.ReadPackSizes()
+	assert.Equal(t, []int{1, 2, 3}, pss)
 }

@@ -10,20 +10,37 @@ import (
 type (
 	PackService interface {
 		CalculatePacks(orderQuantity int) ([]model.PackDetails, error)
+		UpdatePackSizes(packSizes []int)
+		ReadPackSizes() []int
 	}
 	PackServiceImpl struct {
 		packSizes []int
 	}
 )
 
-func NewPackService(packSizes []int) *PackServiceImpl {
-	slices.Reverse(packSizes)
+func NewPackService() *PackServiceImpl {
+	initialPackSizes := []int{250, 500, 1000, 2000, 5000}
+	slices.Reverse(initialPackSizes)
 	return &PackServiceImpl{
-		packSizes: packSizes,
+		packSizes: initialPackSizes,
 	}
 }
 
+func (s *PackServiceImpl) UpdatePackSizes(packSizes []int) {
+	slices.Sort(packSizes)
+	slices.Reverse(packSizes)
+	s.packSizes = packSizes
+}
+func (s *PackServiceImpl) ReadPackSizes() []int {
+	clone := slices.Clone(s.packSizes)
+	slices.Reverse(clone)
+	return clone
+}
+
 func (s *PackServiceImpl) CalculatePacks(orderQuantity int) ([]model.PackDetails, error) {
+
+	logrus.Warn(s.packSizes)
+
 	if orderQuantity <= 0 {
 		return nil, errors.New("order quantity must be greater than 0")
 	}

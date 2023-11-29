@@ -43,6 +43,31 @@ func (_m *PackService) CalculatePacks(orderQuantity int) ([]model.PackDetails, e
 	return r0, r1
 }
 
+// ReadPackSizes provides a mock function with given fields:
+func (_m *PackService) ReadPackSizes() []int {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for ReadPackSizes")
+	}
+
+	var r0 []int
+	if rf, ok := ret.Get(0).(func() []int); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]int)
+		}
+	}
+
+	return r0
+}
+
+// UpdatePackSizes provides a mock function with given fields: packSizes
+func (_m *PackService) UpdatePackSizes(packSizes []int) {
+	_m.Called(packSizes)
+}
+
 // NewPackService creates a new instance of PackService. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewPackService(t interface {

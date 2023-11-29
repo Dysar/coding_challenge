@@ -16,3 +16,7 @@ type PackDetails struct {
 	PackSize   int `json:"pack_size"`
 	PacksCount int `json:"packs_count"`
 }
+
+type PackSizes struct {
+	PackSizes []int `json:"pack_sizes"`
+}

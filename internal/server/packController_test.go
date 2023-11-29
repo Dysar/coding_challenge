@@ -1,6 +1,7 @@
 package server
 
 import (
+	"bytes"
 	"challenge/internal/model"
 	"challenge/mocks"
 	"encoding/json"
@@ -11,7 +12,7 @@ import (
 	"testing"
 )
 
-func TestCalculatePacks(t *testing.T) {
+func TestPackController_CalculatePacks(t *testing.T) {
 
 	t.Run("Valid request", func(t *testing.T) {
 		packSvc := &mocks.PackService{}
@@ -73,4 +74,82 @@ func TestCalculatePacks(t *testing.T) {
 
 		assert.Equal(t, http.StatusBadRequest, rr.Code)
 	})
+}
+
+func TestPackController_ReadPackSizes(t *testing.T) {
+	packService := mocks.PackService{}
+
+	packService.On("ReadPackSizes").Return([]int{1, 2, 3}).Once()
+
+	packController := NewPackController(&packService)
+
+	// Create a request for the readPackSizes handler
+	req, err := http.NewRequest(http.MethodGet, "/api/v1/pack_sizes", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Create a ResponseRecorder to record the response
+	rr := httptest.NewRecorder()
+
+	// Call the readPackSizes handler
+	http.HandlerFunc(packController.readPackSizes).ServeHTTP(rr, req)
+
+	// Check the status code
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+
+	// Decode the response body
+	var response model.PackSizes
+	if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
+		t.Fatal(err)
+	}
+
+	expectedPackSizes := []int{1, 2, 3}
+	assert.Equal(t, expectedPackSizes, response.PackSizes)
+}
+
+func TestPackController_UpdatePackSizes(t *testing.T) {
+	packService := mocks.PackService{}
+
+	packService.On("UpdatePackSizes", []int{1, 2, 3}).Return([]int{1, 2, 3}).Once()
+
+	packController := NewPackController(&packService)
+
+	requestPayload := model.PackSizes{PackSizes: []int{1, 2, 3}}
+
+	// Marshal the request payload to JSON
+	requestBody, err := json.Marshal(requestPayload)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Create a request for the readPackSizes handler
+	req, err := http.NewRequest(http.MethodPut, "/api/v1/pack_sizes", bytes.NewReader(requestBody))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Create a ResponseRecorder to record the response
+	rr := httptest.NewRecorder()
+
+	// Call the readPackSizes handler
+	http.HandlerFunc(packController.updatePackSizes).ServeHTTP(rr, req)
+
+	// Check the status code
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+
+	// Decode the response body
+	var response model.PackSizes
+	if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
+		t.Fatal(err)
+	}
+
+	expectedPackSizes := []int{1, 2, 3}
+	assert.Equal(t, expectedPackSizes, response.PackSizes)
 }

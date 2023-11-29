@@ -21,8 +21,25 @@ var indexTemplate = template.Must(template.New("index").Parse(`
 </head>
 <body>
     <h1>Pack Calculator</h1>
+
+ <!-- Display current pack sizes -->
+    <div>
+        <h2>Current Pack Sizes</h2>
+        <ul id="packSizesList"></ul>
+    </div>
+
+    <!-- Form to edit pack sizes -->
+    <div>
+        <h2>Edit Pack Sizes</h2>
+        <label for="newPackSizes">New Pack Sizes (comma-separated):</label>
+        <input type="text" id="newPackSizes" placeholder="e.g., 23,31,53" required>
+        <button onclick="updatePackSizes()">Update Pack Sizes</button>
+    </div>
+
+
+ 	<h2>Calculate packs</h2>
     <label for="orderQuantity">Order Quantity:</label>
-    <input type="number" id="orderQuantity" required>
+    <input type="number" id="orderQuantity" placeholder="e.g., 12001" required>
     <button onclick="calculatePacks()">Calculate Packs</button>
     
     <div id="result"></div>
@@ -54,6 +71,45 @@ var indexTemplate = template.Must(template.New("index").Parse(`
             })
             .catch(error => console.error('Error:', error));
         }
+
+ 		// Function to display current pack sizes
+        function displayPackSizes() {
+            fetch('/api/v1/pack_sizes')
+            .then(response => response.json())
+            .then(data => {
+                const packSizesList = document.getElementById('packSizesList');
+                packSizesList.innerHTML = '';
+
+                data.pack_sizes.forEach(size => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = size;
+                    packSizesList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Function to update pack sizes
+        function updatePackSizes() {
+            const newPackSizes = document.getElementById('newPackSizes').value.split(',').map(Number);
+
+            fetch('/api/v1/pack_sizes', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ pack_sizes: newPackSizes }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display updated pack sizes
+                displayPackSizes();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+		// Initial display of pack sizes
+        displayPackSizes();
     </script>
 </body>
 </html>

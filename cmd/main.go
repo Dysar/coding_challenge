@@ -1,7 +1,6 @@
 package main
 
 import (
-	"challenge/internal/config"
 	"challenge/internal/server"
 	"fmt"
 	"github.com/braintree/manners"
@@ -18,12 +17,7 @@ import (
 func main() {
 	logrus.Infof("Go version: %s (%s/%s)", runtime.Version(), runtime.GOOS, runtime.GOARCH)
 
-	conf, confErr := config.New("conf.json")
-	if confErr != nil {
-		logrus.Panic("config parser", confErr)
-	}
-
-	router := server.NewRouter(conf)
+	router := server.NewRouter()
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -31,9 +25,9 @@ func main() {
 	}
 
 	srv := &http.Server{
-		ReadHeaderTimeout: conf.Server.ReadHeaderTimeoutSeconds * time.Second,
-		ReadTimeout:       conf.Server.ReadTimeoutSeconds * time.Second,
-		WriteTimeout:      conf.Server.WriteTimeoutSeconds * time.Second,
+		ReadHeaderTimeout: 30 * time.Second,
+		ReadTimeout:       600 * time.Second,
+		WriteTimeout:      600 * time.Second,
 		Handler:           router,
 		Addr:              fmt.Sprintf(":%s", port),
 	}
