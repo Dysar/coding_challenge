@@ -1,8 +1,7 @@
 # Coding challenge
 
-I chose RESTful API. I added a UI as well. 
-And you can configure the pack sizes without having to 
-change the code as they are located in the `conf.json` configuration file.
+I chose RESTful API. I added a UI as well. The user is able to get an overview the pack sizes,
+modify them and calculate the required amount of packs
 
 ## Build & Run
 
@@ -27,7 +26,7 @@ bin/cmd
 
 * UI: https://stark-river-82961-278b69188afd.herokuapp.com
 
-![UI](UI2.png)
+![UI](ui.png)
 * In case you would like to use the API, sample curls: 
 ```bash 
 curl --location --request POST 'https://stark-river-82961-278b69188afd.herokuapp.com/api/v1/calculate_packs' \
