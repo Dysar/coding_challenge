@@ -39,8 +39,6 @@ func (s *PackServiceImpl) ReadPackSizes() []int {
 
 func (s *PackServiceImpl) CalculatePacks(orderQuantity int) ([]model.PackDetails, error) {
 
-	logrus.Warn(s.packSizes)
-
 	if orderQuantity <= 0 {
 		return nil, errors.New("order quantity must be greater than 0")
 	}
