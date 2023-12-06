@@ -3,6 +3,15 @@
 I chose RESTful API. I added a UI as well. The user is able to get an overview the pack sizes,
 modify them and calculate the required amount of packs
 
+
+## The algorithm 
+
+1. The pack sizes are sorted in the reverse order
+2. We iterate over the pack sizes and divide the ordered quantity by the pack size to find out the quotient and the remainder
+3. Next, using the quotient we add a number of packs to the result and using the remainder decide whether we can stop iterating immediately (remainder is less than the small pack size), or we need to iterate further
+4. After the initial iteration is done, we replace packs with the same size with bigger-sized packs to optimize the pack count
+
+
 ## Build & Run
 
 Running with Docker
