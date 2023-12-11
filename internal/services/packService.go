@@ -120,7 +120,7 @@ func (s *PackServiceImpl) adjustMultipleSameSizePacks(packSizesAsc []int, packMa
 				logrus.Infof("adding biggest pack %d with q:%d", packSize, smallerPacksQuantity)
 				packMap.AddPack(packSize, smallerPacksQuantity)
 				for k := i - 1; k >= 0; k-- {
-					logrus.Infof("255: setting count of pack sizes %d to 0", packSizesAsc[k])
+					logrus.Infof("setting count of pack sizes %d to 0", packSizesAsc[k])
 					packMap.SetCount(packSizesAsc[k], 0)
 				}
 			}
@@ -172,7 +172,7 @@ func (s *PackServiceImpl) adjustMultipleSameSizePacks(packSizesAsc []int, packMa
 
 			//clean up all smaller packs
 			for k := i; k >= 0; k-- {
-				logrus.Infof("252: setting count of pack sizes %d to 0", packSizesAsc[k])
+				logrus.Infof("setting count of pack sizes %d to 0", packSizesAsc[k])
 				packMap.SetCount(packSizesAsc[k], 0)
 			}
 			smallerPacksQuantity = 0
