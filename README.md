@@ -37,12 +37,12 @@ bin/cmd
 
 ## How to use
 
-* UI: https://stark-river-82961-278b69188afd.herokuapp.com
+* UI: https://coding-challenge-app-2f0da67d681f.herokuapp.com
 
 ![UI](ui.png)
 * In case you would like to use the API, sample curls: 
 ```bash 
-curl --location --request POST 'https://stark-river-82961-278b69188afd.herokuapp.com/api/v1/calculate_packs' \
+curl --location --request POST 'https://coding-challenge-app-2f0da67d681f.herokuapp.com/api/v1/calculate_packs' \
 --header 'Content-Type: application/json' \
 --data-raw '{
 "order_quantity":10
@@ -51,7 +51,7 @@ curl --location --request POST 'https://stark-river-82961-278b69188afd.herokuapp
 
 Change the packs
 ```bash 
-curl --location --request PUT 'https://stark-river-82961-278b69188afd.herokuapp.com/api/v1/pack_sizes' \
+curl --location --request PUT 'https://coding-challenge-app-2f0da67d681f.herokuapp.com/api/v1/pack_sizes' \
 --header 'Content-Type: application/json' \
 --data '{
     "pack_sizes":[23,31,53]
@@ -60,7 +60,7 @@ curl --location --request PUT 'https://stark-river-82961-278b69188afd.herokuapp.
 
 Get the packs
 ```bash 
-curl --location --request GET 'https://stark-river-82961-278b69188afd.herokuapp.com/api/v1/pack_sizes' 
+curl --location --request GET 'https://coding-challenge-app-2f0da67d681f.herokuapp.com/api/v1/pack_sizes' 
 ```
 
 ### Dependency Versions
