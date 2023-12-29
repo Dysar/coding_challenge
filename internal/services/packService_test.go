@@ -119,8 +119,28 @@ func TestPackService_CalculatePacksForCustomSizes(t *testing.T) {
 			orderedQty: 500000,
 			expectedPacks: []model.PackDetails{
 				{
+					//TODO: should be different
 					PackSize:   53,
 					PacksCount: 9434,
+				},
+			},
+			packSizes: []int{53, 31, 23},
+		},
+		{
+			name:       "107 packs",
+			orderedQty: 107,
+			expectedPacks: []model.PackDetails{
+				{
+					PackSize:   53,
+					PacksCount: 1,
+				},
+				{
+					PackSize:   31,
+					PacksCount: 1,
+				},
+				{
+					PackSize:   23,
+					PacksCount: 1,
 				},
 			},
 			packSizes: []int{53, 31, 23},
@@ -151,7 +171,7 @@ func TestPackService_CalculatePacksForCustomSizes(t *testing.T) {
 			},
 		},
 		{
-			name:       "15 packs simple case",
+			name:       "14 packs simple case",
 			orderedQty: 14,
 			packSizes:  []int{5, 4, 3, 2, 1},
 			expectedPacks: []model.PackDetails{
@@ -169,7 +189,7 @@ func TestPackService_CalculatePacksForCustomSizes(t *testing.T) {
 			},
 		},
 		{
-			name:       "15 packs simple case",
+			name:       "3 packs simple case",
 			orderedQty: 3,
 			packSizes:  []int{5, 4, 3, 2, 1},
 			expectedPacks: []model.PackDetails{
@@ -177,7 +197,7 @@ func TestPackService_CalculatePacksForCustomSizes(t *testing.T) {
 			},
 		},
 		{
-			name:       "15 packs simple case",
+			name:       "300000 packs simple case",
 			orderedQty: 300000,
 			packSizes:  []int{5, 4, 3, 2, 1},
 			expectedPacks: []model.PackDetails{

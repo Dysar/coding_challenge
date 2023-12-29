@@ -104,7 +104,7 @@ func (s *PackServiceImpl) adjustMultipleSameSizePacks(packSizesAsc []int, packMa
 		if !ok {
 			continue
 		}
-		// add only positive cq items to the response
+		// add only positive count items to the response
 		if cq.Count <= 0 {
 			delete(packMap, packSize)
 		}
