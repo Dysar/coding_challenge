@@ -154,6 +154,7 @@ func (s *calculator) iterateOver(i int, prevValues ...int) []int {
 			fmt.Printf("i:%d, res: %v\n", i, elementsToSum)
 			return elementsToSum
 		} else {
+			fmt.Printf("xsum:%d > targetCount: %v\n", xsum, s.targetCount)
 			return nil
 		}
 	}

@@ -19,7 +19,7 @@ type (
 )
 
 func NewPackServiceV2() *PackServiceImplV2 {
-	initialPackSizes := []int{23, 31, 53}
+	initialPackSizes := []int{250, 500, 1000, 2000, 5000}
 	slices.Reverse(initialPackSizes)
 	return &PackServiceImplV2{
 		packSizes: initialPackSizes,
@@ -84,8 +84,19 @@ func (s *PackServiceImplV2) CalculatePacks(orderQuantity int) ([]model.PackDetai
 	values = c.flexibleCalculate()
 	result := []model.PackDetails{}
 	for i, value := range values {
+		if value == 0 {
+			continue
+		}
 		size := s.packSizes[i]
 		result = append(result, model.PackDetails{PackSize: size, PacksCount: value})
 	}
+
+	//TODO: Within the constraints above, send out Rules 1 & 2 send out as few packs as possible to fulfil each order.
 	return result, nil
+}
+
+func (s *PackServiceImplV2) UpdatePackSizes(packSizes []int) {
+	slices.Sort(packSizes)
+	slices.Reverse(packSizes)
+	s.packSizes = packSizes
 }
