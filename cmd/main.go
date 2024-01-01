@@ -15,7 +15,7 @@ import (
 // @contact.email
 
 func main() {
-	logrus.Infof("Go version: %s (%s/%s)", runtime.Version(), runtime.GOOS, runtime.GOARCH)
+	fmt.Printf("Go version: %s (%s/%s)\n", runtime.Version(), runtime.GOOS, runtime.GOARCH)
 
 	router := server.NewRouter()
 
@@ -32,7 +32,7 @@ func main() {
 		Addr:              fmt.Sprintf(":%s", port),
 	}
 
-	logrus.Infof("Server is listening on %s", port)
+	fmt.Printf("Server is listening on %s\n", port)
 	if err := manners.NewWithServer(srv).ListenAndServe(); err != nil {
 		logrus.Fatal(err)
 	}

@@ -87,19 +87,6 @@ func TestPackServiceImplV2_CalculatePacks(t *testing.T) {
 			expectedPacks: []model.PackDetails{
 				{PackSize: 500, PacksCount: 1},
 			},
-
-			//time="2024-01-01T14:41:17+02:00" level=info msg="count: 2, smallerPacksQuantity: 0"
-			//time="2024-01-01T14:41:17+02:00" level=info msg="totalQuantityWithSmallerPacks: 2"
-			//time="2024-01-01T14:41:17+02:00" level=info msg="biggerPackSize(500) is greater or equal to the total quantity"
-			//time="2024-01-01T14:41:17+02:00" level=info msg="isDiffMoreThanSmallestPack: true, biggerPackSize: 500, totalQuantityWithSmallerPacks: 2, smallestPackSize:250"
-			//time="2024-01-01T14:41:17+02:00" level=info msg="checking biggest packs; smallerPacksQuantity: 2"
-
-			//time="2024-01-01T14:41:51+02:00" level=info msg="countAndQuantity: {2 251}, smallerPacksQuantity: 0"
-			//time="2024-01-01T14:41:51+02:00" level=info msg="totalQuantityWithSmallerPacks: 251"
-			//time="2024-01-01T14:41:51+02:00" level=info msg="biggerPackSize(500) is greater or equal to the total quantity"
-			//time="2024-01-01T14:41:51+02:00" level=info msg="isDiffMoreThanSmallestPack: false, biggerPackSize: 500, totalQuantityWithSmallerPacks: 251, smallestPackSize:250"
-			//time="2024-01-01T14:41:51+02:00" level=info msg="adding pack; size 500, quantity: 251"
-			//time="2024-01-01T14:41:51+02:00" level=info msg="setting count of pack sizes 250 to 0"
 		},
 		{
 			name:       "501 ordered items",
@@ -132,6 +119,76 @@ func TestPackServiceImplV2_CalculatePacks(t *testing.T) {
 				{PackSize: 5000, PacksCount: 2},
 				{PackSize: 2000, PacksCount: 1},
 				{PackSize: 250, PacksCount: 1},
+			},
+		},
+		{
+			name:       "100 packs",
+			orderedQty: 100,
+			expectedPacks: []model.PackDetails{
+				{PackSize: 31, PacksCount: 1},
+				{PackSize: 7, PacksCount: 10},
+			},
+			packSizes: []int{53, 31, 7},
+		},
+		{
+			name:       "100 packs with packs 3x",
+			orderedQty: 100,
+			expectedPacks: []model.PackDetails{
+				{PackSize: 90, PacksCount: 1},
+				{PackSize: 10, PacksCount: 1},
+			},
+			packSizes: []int{90, 30, 10},
+		},
+		{
+			name:       "15 packs simple case",
+			orderedQty: 15,
+			packSizes:  []int{5, 4, 3, 2, 1},
+			expectedPacks: []model.PackDetails{
+				{PackSize: 5, PacksCount: 3},
+			},
+		},
+		{
+			name:       "14 packs simple case",
+			orderedQty: 14,
+			packSizes:  []int{5, 4, 3, 2, 1},
+			expectedPacks: []model.PackDetails{
+				{PackSize: 5, PacksCount: 2},
+				{PackSize: 4, PacksCount: 1},
+			},
+		},
+		{
+			name:       "15 packs simple case",
+			orderedQty: 9,
+			packSizes:  []int{5, 4, 3, 2, 1},
+			expectedPacks: []model.PackDetails{
+				{PackSize: 5, PacksCount: 1},
+				{PackSize: 4, PacksCount: 1},
+			},
+		},
+		{
+			name:       "3 packs simple case",
+			orderedQty: 3,
+			packSizes:  []int{5, 4, 3, 2, 1},
+			expectedPacks: []model.PackDetails{
+				{PackSize: 3, PacksCount: 1},
+			},
+		},
+		{
+			name:       "300000 packs simple case",
+			orderedQty: 300000,
+			packSizes:  []int{5, 4, 3, 2, 1},
+			expectedPacks: []model.PackDetails{
+				{PackSize: 5, PacksCount: 60000},
+			},
+		},
+		{
+			name:       "910 ordered, custom packs",
+			orderedQty: 910,
+			packSizes:  []int{500, 100, 20},
+			expectedPacks: []model.PackDetails{
+				{PackSize: 500, PacksCount: 1},
+				{PackSize: 100, PacksCount: 4},
+				{PackSize: 20, PacksCount: 1},
 			},
 		},
 	}

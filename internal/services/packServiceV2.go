@@ -3,13 +3,15 @@ package services
 import (
 	"challenge/internal/model"
 	"errors"
-	"github.com/sirupsen/logrus"
+	"fmt"
 	"slices"
 )
 
 type (
 	PackServiceV2 interface {
 		CalculatePacks(orderQuantity int) ([]model.PackDetails, error)
+		UpdatePackSizes(packSizes []int)
+		ReadPackSizes() []int
 	}
 
 	PackServiceImplV2 struct {
@@ -48,9 +50,9 @@ func (s *PackServiceImplV2) CalculatePacks(orderQuantity int) ([]model.PackDetai
 			return nil, errors.New("all pack sizes must be positive")
 		}
 		packsCount := remainingQuantity / packSize
-		logrus.Infof("packsCount(%d) := remainingQuantity(%d) / packSize(%d)", packsCount, remainingQuantity, packSize)
+		fmt.Printf("packsCount(%d) := remainingQuantity(%d) / packSize(%d)", packsCount, remainingQuantity, packSize)
 		if packsCount > 0 {
-			logrus.Infof("adding a pack size %d, count: %d", packSize, packsCount)
+			fmt.Printf("adding a pack size %d, count: %d", packSize, packsCount)
 			packMap.AddPacks(packSize, packsCount)
 			remainingQuantity %= packSize
 		}
@@ -63,7 +65,7 @@ func (s *PackServiceImplV2) CalculatePacks(orderQuantity int) ([]model.PackDetai
 		if remainingQuantity <= smallestPack {
 
 			//fill one smallest pack (250)
-			logrus.Infof("adding one smallest pack size %d, count: %d", smallestPack, 1)
+			fmt.Printf("adding one smallest pack size %d, count: %d", smallestPack, 1)
 			packMap.AddPack(smallestPack)
 			break
 		}
@@ -100,6 +102,12 @@ func (s *PackServiceImplV2) UpdatePackSizes(packSizes []int) {
 	s.packSizes = packSizes
 }
 
+func (s *PackServiceImplV2) ReadPackSizes() []int {
+	clone := slices.Clone(s.packSizes)
+	slices.Reverse(clone)
+	return clone
+}
+
 func (s *PackServiceImplV2) adjustPacks(packMap model.PacksV2) {
 
 	packSizesAsc := slices.Clone(s.packSizes)
@@ -122,16 +130,16 @@ func (s *PackServiceImplV2) adjustPacks(packMap model.PacksV2) {
 
 		if i == len(packSizesAsc)-1 {
 			//if it's the biggest pack, we still might want to make adjustments
-			logrus.Infof("checking biggest packs; smallerPacksQuantity: %d", smallerPacksQuantity)
+			fmt.Printf("checking biggest packs; smallerPacksQuantity: %d\n", smallerPacksQuantity)
 			if smallerPacksQuantity > packSize {
 				break
 			}
 			//smallerPacksQuantity <= packSize
 			if isDiffLessThanSmallestPack := (packSize - smallerPacksQuantity) < smallestPackSize; isDiffLessThanSmallestPack {
-				logrus.Infof("adding biggest pack %d with q:%d", packSize, smallerPacksQuantity)
+				fmt.Printf("adding biggest pack %d with q:%d\n", packSize, smallerPacksQuantity)
 				packMap.AddPack(packSize)
 				for k := i - 1; k >= 0; k-- {
-					logrus.Infof("setting count of pack sizes %d to 0", packSizesAsc[k])
+					fmt.Printf("setting count of pack sizes %d to 0\n", packSizesAsc[k])
 					packMap.SetCount(packSizesAsc[k], 0)
 				}
 			}
@@ -144,11 +152,10 @@ func (s *PackServiceImplV2) adjustPacks(packMap model.PacksV2) {
 
 		//there is more than 1 pack they can potentially be replaced by a larger pack
 
-		logrus.Infof("count: %d, smallerPacksQuantity: %d", count, smallerPacksQuantity)
+		fmt.Printf("count: %d, smallerPacksQuantity: %d\n", count, smallerPacksQuantity)
 
-		//TODO: now we don;t know the quantity
 		totalQuantityWithSmallerPacks := count*packSize + smallerPacksQuantity
-		logrus.Infof("totalQuantityWithSmallerPacks: %d", totalQuantityWithSmallerPacks)
+		fmt.Printf("totalQuantityWithSmallerPacks: %d\n", totalQuantityWithSmallerPacks)
 
 		biggerPackSize := packSizesAsc[i+1]
 
@@ -156,18 +163,18 @@ func (s *PackServiceImplV2) adjustPacks(packMap model.PacksV2) {
 		//if it's <, we need to make sure that the difference is less than the smallest pack
 
 		if biggerPackSize < totalQuantityWithSmallerPacks {
-			logrus.Infof("biggerPackSize(%d) is less than total quantity", biggerPackSize)
+			fmt.Printf("biggerPackSize(%d) is less than total quantity\n", biggerPackSize)
 			//what if the bigger pack is 500 and total quantity of smaller packs is 2000?
 			//	in that case I would look for bigger pack that could fit those items. next pack would be 1000, 1000<2000, next pack would be 2000, that is fine, we can use that one
 			//	2000-2000=0; 0<250 (smallest pack), all good
 			smallerPacksQuantity += count * packSize
 			continue
 		} else {
-			logrus.Infof("biggerPackSize(%d) is greater or equal to the total quantity", biggerPackSize)
+			fmt.Printf("biggerPackSize(%d) is greater or equal to the total quantity\n", biggerPackSize)
 
 			//biggerPackSize => total quantity, e.g. pack size = 500, total quantity 100*4+80=480
 			isDiffMoreThanSmallestPack := (biggerPackSize - totalQuantityWithSmallerPacks) > smallestPackSize
-			logrus.Infof("isDiffMoreThanSmallestPack: %t, biggerPackSize: %d, totalQuantityWithSmallerPacks: %d, smallestPackSize:%d",
+			fmt.Printf("isDiffMoreThanSmallestPack: %t, biggerPackSize: %d, totalQuantityWithSmallerPacks: %d, smallestPackSize:%d",
 				isDiffMoreThanSmallestPack, biggerPackSize, totalQuantityWithSmallerPacks, smallestPackSize)
 
 			if isDiffMoreThanSmallestPack {
@@ -179,12 +186,12 @@ func (s *PackServiceImplV2) adjustPacks(packMap model.PacksV2) {
 			//	then we can rearrange.
 
 			//add one pack of a bigger size
-			logrus.Infof("adding pack; size %d, quantity: %d", biggerPackSize, totalQuantityWithSmallerPacks)
+			fmt.Printf("adding pack; size %d, quantity: %d\n", biggerPackSize, totalQuantityWithSmallerPacks)
 			packMap.AddPack(biggerPackSize)
 
 			//clean up all smaller packs
 			for k := i; k >= 0; k-- {
-				logrus.Infof("setting count of pack sizes %d to 0", packSizesAsc[k])
+				fmt.Printf("setting count of pack sizes %d to 0\n", packSizesAsc[k])
 				packMap.SetCount(packSizesAsc[k], 0)
 			}
 			smallerPacksQuantity = 0
