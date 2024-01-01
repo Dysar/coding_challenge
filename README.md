@@ -6,6 +6,12 @@ modify them and calculate the required amount of packs
 
 ## The algorithm 
 
+Requirement: 
+1. Only whole packs can be sent. Packs cannot be broken open.
+2. Within the constraints of Rule 1 above, send out no more items than necessary to fulfil the order.
+3. Within the constraints above, send out Rules 1 & 2 send out as few packs as possible to fulfil each order.
+
+Solution:
 1. The pack sizes are sorted in descending order
 2. We iterate over the pack sizes and divide the ordered quantity by the pack size to find out the quotient and the remainder 
 3. Next, using the quotient we add a number of packs to the result and using the remainder decide whether we can stop iterating immediately (remainder is less than the small pack size), or we need to iterate further
