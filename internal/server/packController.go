@@ -8,10 +8,10 @@ import (
 )
 
 type PackController struct {
-	PackService services.PackServiceV2
+	PackService services.PackService
 }
 
-func NewPackController(packService services.PackServiceV2) *PackController {
+func NewPackController(packService services.PackService) *PackController {
 	return &PackController{
 		PackService: packService,
 	}

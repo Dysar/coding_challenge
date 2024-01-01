@@ -9,7 +9,7 @@ import (
 func NewRouter() *mux.Router {
 	r := mux.NewRouter()
 
-	controller := NewPackController(services.NewPackServiceV2())
+	controller := NewPackController(services.NewPackService())
 
 	r.HandleFunc("/", newViewController().viewHandler)
 	r.HandleFunc("/api/v1/calculate_packs", controller.calculatePacks).Methods(http.MethodPost)

@@ -8,27 +8,27 @@ import (
 )
 
 type (
-	PackServiceV2 interface {
+	PackService interface {
 		CalculatePacks(orderQuantity int) ([]model.PackDetails, error)
 		UpdatePackSizes(packSizes []int)
 		ReadPackSizes() []int
 	}
 
-	PackServiceImplV2 struct {
+	PackServiceImpl struct {
 		// pack sizes are sorted desc
 		packSizes []int
 	}
 )
 
-func NewPackServiceV2() *PackServiceImplV2 {
+func NewPackService() *PackServiceImpl {
 	initialPackSizes := []int{250, 500, 1000, 2000, 5000}
 	slices.Reverse(initialPackSizes)
-	return &PackServiceImplV2{
+	return &PackServiceImpl{
 		packSizes: initialPackSizes,
 	}
 }
 
-func (s *PackServiceImplV2) CalculatePacks(orderQuantity int) ([]model.PackDetails, error) {
+func (s *PackServiceImpl) CalculatePacks(orderQuantity int) ([]model.PackDetails, error) {
 
 	if orderQuantity <= 0 {
 		return nil, errors.New("order quantity must be greater than 0")
@@ -38,7 +38,7 @@ func (s *PackServiceImplV2) CalculatePacks(orderQuantity int) ([]model.PackDetai
 	}
 
 	var (
-		packMap           = make(model.PacksV2)
+		packMap           = make(model.Packs)
 		remainingQuantity = orderQuantity
 		lastIndex         = len(s.packSizes) - 1
 		smallestPack      = s.packSizes[lastIndex]
@@ -74,6 +74,7 @@ func (s *PackServiceImplV2) CalculatePacks(orderQuantity int) ([]model.PackDetai
 	var sum int
 	values := make([]int, len(s.packSizes))
 
+	//TODO: unnecessary iteration?
 	for i, packSize := range s.packSizes {
 		if count, ok := packMap[packSize]; ok {
 			sum += packSize * count
@@ -96,19 +97,19 @@ func (s *PackServiceImplV2) CalculatePacks(orderQuantity int) ([]model.PackDetai
 	return s.packsToResponse(packMap), nil
 }
 
-func (s *PackServiceImplV2) UpdatePackSizes(packSizes []int) {
+func (s *PackServiceImpl) UpdatePackSizes(packSizes []int) {
 	slices.Sort(packSizes)
 	slices.Reverse(packSizes)
 	s.packSizes = packSizes
 }
 
-func (s *PackServiceImplV2) ReadPackSizes() []int {
+func (s *PackServiceImpl) ReadPackSizes() []int {
 	clone := slices.Clone(s.packSizes)
 	slices.Reverse(clone)
 	return clone
 }
 
-func (s *PackServiceImplV2) adjustPacks(packMap model.PacksV2) {
+func (s *PackServiceImpl) adjustPacks(packMap model.Packs) {
 
 	packSizesAsc := slices.Clone(s.packSizes)
 	slices.Reverse(packSizesAsc)
@@ -200,7 +201,7 @@ func (s *PackServiceImplV2) adjustPacks(packMap model.PacksV2) {
 	}
 }
 
-func (s *PackServiceImplV2) packsToResponse(packMap model.PacksV2) []model.PackDetails {
+func (s *PackServiceImpl) packsToResponse(packMap model.Packs) []model.PackDetails {
 	var packsNeeded []model.PackDetails
 
 	// iterate over the original slice to maintain the order of the response

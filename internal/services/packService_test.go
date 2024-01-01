@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestPackServiceImplV2_CalculatePacks(t *testing.T) {
+func TestPackServiceImpl_CalculatePacks(t *testing.T) {
 	testCases := []struct {
 		name          string
 		orderedQty    int
@@ -15,13 +15,6 @@ func TestPackServiceImplV2_CalculatePacks(t *testing.T) {
 		packSizes     []int
 		expectedError error
 	}{
-		//{
-		//	name:          "no pack sizes",
-		//	orderedQty:    1,
-		//	expectedPacks: []model.PackDetails{},
-		//	packSizes:     []int{},
-		//	expectedError: errors.New("no pack sizes configured"),
-		//},
 		{
 			name:          "negative pack sizes",
 			orderedQty:    1,
@@ -195,7 +188,7 @@ func TestPackServiceImplV2_CalculatePacks(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			service := NewPackServiceV2()
+			service := NewPackService()
 			if len(tc.packSizes) != 0 {
 				service.packSizes = tc.packSizes
 			}
@@ -208,4 +201,18 @@ func TestPackServiceImplV2_CalculatePacks(t *testing.T) {
 			assert.Equal(t, tc.expectedPacks, packs)
 		})
 	}
+}
+
+func TestPackServiceImpl_UpdatePackSizes(t *testing.T) {
+	svc := NewPackService()
+	svc.UpdatePackSizes([]int{1, 2, 3})
+	assert.Equal(t, []int{3, 2, 1}, svc.packSizes)
+}
+
+func TestPackServiceImpl_ReadPackSizes(t *testing.T) {
+	svc := NewPackService()
+	svc.UpdatePackSizes([]int{1, 2, 3})
+
+	pss := svc.ReadPackSizes()
+	assert.Equal(t, []int{1, 2, 3}, pss)
 }

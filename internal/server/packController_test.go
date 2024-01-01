@@ -38,7 +38,7 @@ func TestPackController_CalculatePacks(t *testing.T) {
 	})
 
 	t.Run("Valid request 2", func(t *testing.T) {
-		packSvc := &mocks.PackServiceV2{}
+		packSvc := &mocks.PackService{}
 		controller := NewPackController(packSvc)
 
 		reqBody := `{"order_quantity": 15}`

@@ -5,6 +5,7 @@ import (
 	"math"
 )
 
+// calculator is covered with tests in the packService code
 type calculator struct {
 	bestSumSoFar              int
 	bestCountSoFarElements    []int
