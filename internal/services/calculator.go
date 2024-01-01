@@ -33,12 +33,10 @@ func (s *calculator) flexibleCalculate() []int {
 
 	for x1 := s.values[0]; x1 >= 0; x1-- {
 
-		fmt.Println("summing up x1")
+		//fmt.Println("summing up x1")
 		elementsToSum := append([]int{x1}, s.values[1:]...)
 		x1sum := s.sum(elementsToSum)
 
-		//fmt.Printf("x1: %d, x2: %d, sum:%d \n", x1, x2, x1sum)
-		//fmt.Println("current is not exactly target? ", x1sum != targetCount)
 		if x1sum != s.targetCount {
 			if result := s.iterateOver(1, x1); result != nil {
 				return result
@@ -55,10 +53,10 @@ func (s *calculator) sum(values []int) int {
 	var sum int
 	for i, v := range values {
 		sum += v * s.sizes[i]
-		fmt.Printf("x%d: %d ", i+1, v)
+		//fmt.Printf("x%d: %d ", i+1, v)
 	}
-	fmt.Printf("sum:%d", sum)
-	fmt.Printf("\n")
+	//fmt.Printf("sum:%d", sum)
+	//fmt.Printf("\n")
 
 	if sum == s.targetCount {
 		return sum
@@ -78,7 +76,7 @@ func (s *calculator) iterateOver(i int, prevValues ...int) []int {
 
 	for x := val; x < 1000000 && x >= 0; x++ {
 
-		fmt.Printf("summing up x%d\n", i+1)
+		//fmt.Printf("summing up x%d\n", i+1)
 		s.elementsToSum = append(prevValues, x)
 		s.elementsToSum = append(s.elementsToSum, s.values[i+1:]...)
 
@@ -91,10 +89,10 @@ func (s *calculator) iterateOver(i int, prevValues ...int) []int {
 				}
 			}
 		} else if xsum == s.targetCount {
-			fmt.Printf("i:%d, res: %v\n", i, s.elementsToSum)
+			//fmt.Printf("i:%d, res: %v\n", i, s.elementsToSum)
 			return s.elementsToSum
 		} else {
-			fmt.Printf("xsum:%d > targetCount: %v\n", xsum, s.targetCount)
+			//fmt.Printf("xsum:%d > targetCount: %v\n", xsum, s.targetCount)
 			return nil
 		}
 	}

@@ -9,7 +9,8 @@ modify them and calculate the required amount of packs
 1. The pack sizes are sorted in descending order
 2. We iterate over the pack sizes and divide the ordered quantity by the pack size to find out the quotient and the remainder 
 3. Next, using the quotient we add a number of packs to the result and using the remainder decide whether we can stop iterating immediately (remainder is less than the small pack size), or we need to iterate further
-4. After the initial iteration is done, we try to replace packs of the same size with bigger-sized packs to optimize the pack count
+4. After the initial iteration is done, we check if there are any other combinations that would suffice the initial equasion x1n + x2m ... x3p = total sum; where n,m,p are the pack sizes, x1, x2, x3 are the quantities of the packs. So that x1 + x2 ... xn = Minimize Z 
+5. After that, we try to replace packs of the same size with bigger-sized packs to optimize the pack count
 
 ## Logging
 

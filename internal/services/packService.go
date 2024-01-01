@@ -3,7 +3,6 @@ package services
 import (
 	"challenge/internal/model"
 	"errors"
-	"fmt"
 	"slices"
 )
 
@@ -50,9 +49,9 @@ func (s *PackServiceImpl) CalculatePacks(orderQuantity int) ([]model.PackDetails
 			return nil, errors.New("all pack sizes must be positive")
 		}
 		packsCount := remainingQuantity / packSize
-		fmt.Printf("packsCount(%d) := remainingQuantity(%d) / packSize(%d)", packsCount, remainingQuantity, packSize)
+		//fmt.Printf("packsCount(%d) := remainingQuantity(%d) / packSize(%d)", packsCount, remainingQuantity, packSize)
 		if packsCount > 0 {
-			fmt.Printf("adding a pack size %d, count: %d", packSize, packsCount)
+			//fmt.Printf("adding a pack size %d, count: %d", packSize, packsCount)
 			packMap.AddPacks(packSize, packsCount)
 			remainingQuantity %= packSize
 		}
@@ -65,7 +64,7 @@ func (s *PackServiceImpl) CalculatePacks(orderQuantity int) ([]model.PackDetails
 		if remainingQuantity <= smallestPack {
 
 			//fill one smallest pack (250)
-			fmt.Printf("adding one smallest pack size %d, count: %d", smallestPack, 1)
+			//fmt.Printf("adding one smallest pack size %d, count: %d", smallestPack, 1)
 			packMap.AddPack(smallestPack)
 			break
 		}
@@ -131,16 +130,16 @@ func (s *PackServiceImpl) adjustPacks(packMap model.Packs) {
 
 		if i == len(packSizesAsc)-1 {
 			//if it's the biggest pack, we still might want to make adjustments
-			fmt.Printf("checking biggest packs; smallerPacksQuantity: %d\n", smallerPacksQuantity)
+			//fmt.Printf("checking biggest packs; smallerPacksQuantity: %d\n", smallerPacksQuantity)
 			if smallerPacksQuantity > packSize {
 				break
 			}
 			//smallerPacksQuantity <= packSize
 			if isDiffLessThanSmallestPack := (packSize - smallerPacksQuantity) < smallestPackSize; isDiffLessThanSmallestPack {
-				fmt.Printf("adding biggest pack %d with q:%d\n", packSize, smallerPacksQuantity)
+				//fmt.Printf("adding biggest pack %d with q:%d\n", packSize, smallerPacksQuantity)
 				packMap.AddPack(packSize)
 				for k := i - 1; k >= 0; k-- {
-					fmt.Printf("setting count of pack sizes %d to 0\n", packSizesAsc[k])
+					//fmt.Printf("setting count of pack sizes %d to 0\n", packSizesAsc[k])
 					packMap.SetCount(packSizesAsc[k], 0)
 				}
 			}
@@ -153,10 +152,10 @@ func (s *PackServiceImpl) adjustPacks(packMap model.Packs) {
 
 		//there is more than 1 pack they can potentially be replaced by a larger pack
 
-		fmt.Printf("count: %d, smallerPacksQuantity: %d\n", count, smallerPacksQuantity)
+		//fmt.Printf("count: %d, smallerPacksQuantity: %d\n", count, smallerPacksQuantity)
 
 		totalQuantityWithSmallerPacks := count*packSize + smallerPacksQuantity
-		fmt.Printf("totalQuantityWithSmallerPacks: %d\n", totalQuantityWithSmallerPacks)
+		//fmt.Printf("totalQuantityWithSmallerPacks: %d\n", totalQuantityWithSmallerPacks)
 
 		biggerPackSize := packSizesAsc[i+1]
 
@@ -164,19 +163,19 @@ func (s *PackServiceImpl) adjustPacks(packMap model.Packs) {
 		//if it's <, we need to make sure that the difference is less than the smallest pack
 
 		if biggerPackSize < totalQuantityWithSmallerPacks {
-			fmt.Printf("biggerPackSize(%d) is less than total quantity\n", biggerPackSize)
+			//fmt.Printf("biggerPackSize(%d) is less than total quantity\n", biggerPackSize)
 			//what if the bigger pack is 500 and total quantity of smaller packs is 2000?
 			//	in that case I would look for bigger pack that could fit those items. next pack would be 1000, 1000<2000, next pack would be 2000, that is fine, we can use that one
 			//	2000-2000=0; 0<250 (smallest pack), all good
 			smallerPacksQuantity += count * packSize
 			continue
 		} else {
-			fmt.Printf("biggerPackSize(%d) is greater or equal to the total quantity\n", biggerPackSize)
+			//fmt.Printf("biggerPackSize(%d) is greater or equal to the total quantity\n", biggerPackSize)
 
 			//biggerPackSize => total quantity, e.g. pack size = 500, total quantity 100*4+80=480
 			isDiffMoreThanSmallestPack := (biggerPackSize - totalQuantityWithSmallerPacks) > smallestPackSize
-			fmt.Printf("isDiffMoreThanSmallestPack: %t, biggerPackSize: %d, totalQuantityWithSmallerPacks: %d, smallestPackSize:%d",
-				isDiffMoreThanSmallestPack, biggerPackSize, totalQuantityWithSmallerPacks, smallestPackSize)
+			//fmt.Printf("isDiffMoreThanSmallestPack: %t, biggerPackSize: %d, totalQuantityWithSmallerPacks: %d, smallestPackSize:%d",
+			//	isDiffMoreThanSmallestPack, biggerPackSize, totalQuantityWithSmallerPacks, smallestPackSize)
 
 			if isDiffMoreThanSmallestPack {
 				smallerPacksQuantity += count * packSize
@@ -187,12 +186,12 @@ func (s *PackServiceImpl) adjustPacks(packMap model.Packs) {
 			//	then we can rearrange.
 
 			//add one pack of a bigger size
-			fmt.Printf("adding pack; size %d, quantity: %d\n", biggerPackSize, totalQuantityWithSmallerPacks)
+			//fmt.Printf("adding pack; size %d, quantity: %d\n", biggerPackSize, totalQuantityWithSmallerPacks)
 			packMap.AddPack(biggerPackSize)
 
 			//clean up all smaller packs
 			for k := i; k >= 0; k-- {
-				fmt.Printf("setting count of pack sizes %d to 0\n", packSizesAsc[k])
+				//fmt.Printf("setting count of pack sizes %d to 0\n", packSizesAsc[k])
 				packMap.SetCount(packSizesAsc[k], 0)
 			}
 			smallerPacksQuantity = 0
