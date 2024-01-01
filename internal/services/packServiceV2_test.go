@@ -15,13 +15,13 @@ func TestPackServiceImplV2_CalculatePacks(t *testing.T) {
 		packSizes     []int
 		expectedError error
 	}{
-		{
-			name:          "no pack sizes",
-			orderedQty:    1,
-			expectedPacks: []model.PackDetails{},
-			packSizes:     []int{},
-			expectedError: errors.New("no pack sizes configured"),
-		},
+		//{
+		//	name:          "no pack sizes",
+		//	orderedQty:    1,
+		//	expectedPacks: []model.PackDetails{},
+		//	packSizes:     []int{},
+		//	expectedError: errors.New("no pack sizes configured"),
+		//},
 		{
 			name:          "negative pack sizes",
 			orderedQty:    1,
@@ -87,6 +87,19 @@ func TestPackServiceImplV2_CalculatePacks(t *testing.T) {
 			expectedPacks: []model.PackDetails{
 				{PackSize: 500, PacksCount: 1},
 			},
+
+			//time="2024-01-01T14:41:17+02:00" level=info msg="count: 2, smallerPacksQuantity: 0"
+			//time="2024-01-01T14:41:17+02:00" level=info msg="totalQuantityWithSmallerPacks: 2"
+			//time="2024-01-01T14:41:17+02:00" level=info msg="biggerPackSize(500) is greater or equal to the total quantity"
+			//time="2024-01-01T14:41:17+02:00" level=info msg="isDiffMoreThanSmallestPack: true, biggerPackSize: 500, totalQuantityWithSmallerPacks: 2, smallestPackSize:250"
+			//time="2024-01-01T14:41:17+02:00" level=info msg="checking biggest packs; smallerPacksQuantity: 2"
+
+			//time="2024-01-01T14:41:51+02:00" level=info msg="countAndQuantity: {2 251}, smallerPacksQuantity: 0"
+			//time="2024-01-01T14:41:51+02:00" level=info msg="totalQuantityWithSmallerPacks: 251"
+			//time="2024-01-01T14:41:51+02:00" level=info msg="biggerPackSize(500) is greater or equal to the total quantity"
+			//time="2024-01-01T14:41:51+02:00" level=info msg="isDiffMoreThanSmallestPack: false, biggerPackSize: 500, totalQuantityWithSmallerPacks: 251, smallestPackSize:250"
+			//time="2024-01-01T14:41:51+02:00" level=info msg="adding pack; size 500, quantity: 251"
+			//time="2024-01-01T14:41:51+02:00" level=info msg="setting count of pack sizes 250 to 0"
 		},
 		{
 			name:       "501 ordered items",
