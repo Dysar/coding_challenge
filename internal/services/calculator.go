@@ -7,10 +7,10 @@ import (
 
 // calculator is covered with tests in the packService code
 type calculator struct {
-	bestSumSoFar              int
-	bestCountSoFarElements    []int
-	targetCount, initialCount int
-	values, sizes             []int
+	bestSumSoFar                 int
+	bestCountSoFarElements       []int
+	targetCount, initialCount    int
+	values, sizes, elementsToSum []int
 }
 
 // newCalculator constructor. values, sizes (must be sorted desc)
@@ -22,6 +22,8 @@ func newCalculator(values, sizes []int, targetCount, initialCount int) *calculat
 		initialCount:           initialCount,
 		values:                 values,
 		sizes:                  sizes,
+		// to avoid unnecessary slice creation
+		elementsToSum: make([]int, len(values)),
 	}
 	copy(c.bestCountSoFarElements, values)
 	return c
@@ -72,29 +74,25 @@ func (s *calculator) sum(values []int) int {
 
 // iterateOver returns the result if we got it and nil if we need to continue
 func (s *calculator) iterateOver(i int, prevValues ...int) []int {
-	val := s.values[i] //TODO: check if the element exists
+	val := s.values[i]
 
 	for x := val; x < 1000000 && x >= 0; x++ {
 
 		fmt.Printf("summing up x%d\n", i+1)
-		elementsToSum := append(prevValues, x)
-		elementsToSum = append(elementsToSum, s.values[i+1:]...)
-		//fmt.Printf("i:%d elements to sum: %v\n", i, elementsToSum)
+		s.elementsToSum = append(prevValues, x)
+		s.elementsToSum = append(s.elementsToSum, s.values[i+1:]...)
 
-		if xsum := s.sum(elementsToSum); xsum < s.targetCount {
+		if xsum := s.sum(s.elementsToSum); xsum < s.targetCount {
 			if i != len(s.values)-1 { //if is not the smallest item
 				if result := s.iterateOver(i+1, append(prevValues, x)...); result != nil {
 					return result
 				} else {
-					//break //should go back a step and do -1 for larger size
 					continue
 				}
-			} else {
-
 			}
 		} else if xsum == s.targetCount {
-			fmt.Printf("i:%d, res: %v\n", i, elementsToSum)
-			return elementsToSum
+			fmt.Printf("i:%d, res: %v\n", i, s.elementsToSum)
+			return s.elementsToSum
 		} else {
 			fmt.Printf("xsum:%d > targetCount: %v\n", xsum, s.targetCount)
 			return nil
